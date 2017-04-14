@@ -1,0 +1,4 @@
+# ignore Latex
+*.aux
+*.log
+*.synctex.gz
