@@ -12,10 +12,12 @@
 
 \maketitle
 
-Das Myo Armband von Thalmic Labs ist ein Eingabegerät für verschiedene Betriebssysteme, welches Handgesten des Benutzers aufnimmt, um diese dann mittels vordefinierter oder eigener Programme als Eingabe zu interpretieren. Die Gesten werden mit Hilfe von Oberflächensensoren für die Elektromyographie (EMG) der Unterarmmuskulatur und einer inertialen Messeinheit (IMU) erfasst, welche Lage und Beschleunigung des Armbandes berechnet. Seitens des Herstellers ist das Armband in der Lage, fünf vordefinierte EMG-Gesten zu erkennen. Diese können dann programmatisch mit IMU-Gesten kombiniert werden, um so neue Gesten zu ermöglichen.\\
+Das Myo Armband von Thalmic Labs ist ein Eingabegerät für verschiedene Betriebssysteme, welches Hand- und Armgesten des Benutzers aufnimmt, um diese dann mittels vordefinierter oder eigener Programme als Eingabe zu interpretieren. Die Gesten werden mit Hilfe von Oberflächensensoren für die Elektromyographie (EMG) der Unterarmmuskulatur und einer inertialen Messeinheit (IMU) erfasst, welche Lage und Beschleunigung des Armbandes berechnet. Seitens des Herstellers ist das Armband in der Lage, fünf vordefinierte EMG-Gesten zu erkennen. Diese können dann programmatisch mit IMU-Gesten kombiniert werden, um so neue Gesten zu ermöglichen.\\
 
-Diese Bachelorarbeit beginnt damit, [8, 10, 12, 16] selbst definierte Gesten mit Machine Learning Algorithmen zu lernen, um festzustellen, ob eine Gestenerkennung mit dem Myo Armband möglich ist. Für das Training wird jede Geste separat als eine Sequenz aufgezeichnet. Diese Datensätze bilden dann das Trainings- und Validierungsset. Die Versuche werden mit einem Subset der anfangs definierten Gesten starten. Außerdem werden Beginn und Ende einer Gestensequenz zunächst durch den Anwender festgelegt. Dabei ist die Suche nach dem besten Algorithmus zur Gestenerkennung optional.\\
+In dieser Bachelorarbeit sollen Hand- und Armgesten mit dem Myo Armband aufgezeichnet und mit Machine Learning Algorithmen gelernt werden. Hierbei wird festgestellt, ob eine Gestenerkennung anhand dieser Daten möglich ist. Für das Training wird jede Geste separat als eine Sequenz aufgezeichnet. Beginn und Ende einer Gestensequenz werden durch den Anwender festgelegt.\\
 
-Ist eine zufriedenstellende Erkennungsrate gegeben, soll in einem nächsten Schritt die automatische Erfassung der Gestensequenzen ermöglicht werden. Auch hier ist die Suche nach dem besten Algorithmus optional. Sofern diese automatische Erfassung gelingt, soll das Ganze an einem Anwendungsbeispiel veranschaulicht werden. Bei diesem Beispiel handelt es sich um einen NAO Roboter, der auf erkannte Gesten reagiert.
+Die automatische Erfassung einer Gestensequenz kann als Erweiterung ermöglicht werden. Sofern dies gelingt, wird das Ganze an einem Anwendungsbeispiel veranschaulicht. Bei diesem Beispiel soll ein NAO Roboter auf erkannte Gesten reagieren.
+
+
 
 \end{document}
