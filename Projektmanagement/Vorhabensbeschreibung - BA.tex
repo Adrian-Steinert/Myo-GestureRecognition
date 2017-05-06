@@ -1,8 +1,11 @@
 \documentclass[]{scrartcl}
 
 \usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{setspace}
 
 \setlength{\parindent}{0pt}
+%\onehalfspacing
 
 %opening
 \title{Vorhabensbeschreibung -- Bachelorarbeit}
@@ -14,9 +17,16 @@
 
 Das Myo Armband von Thalmic Labs ist ein Eingabegerät für verschiedene Betriebssysteme, welches Hand- und Armgesten des Benutzers aufnimmt, um diese dann mittels vordefinierter oder eigener Programme als Eingabe zu interpretieren. Die Gesten werden mit Hilfe von Oberflächensensoren für die Elektromyographie (EMG) der Unterarmmuskulatur und einer inertialen Messeinheit (IMU) erfasst, welche Lage und Beschleunigung des Armbandes berechnet. Seitens des Herstellers ist das Armband in der Lage, fünf vordefinierte EMG-Gesten zu erkennen. Diese können dann programmatisch mit IMU-Gesten kombiniert werden, um so neue Gesten zu ermöglichen.\\
 
-In dieser Bachelorarbeit sollen Hand- und Armgesten mit dem Myo Armband aufgezeichnet und mit Machine Learning Algorithmen gelernt werden. Hierbei wird festgestellt, ob eine Gestenerkennung anhand dieser Daten möglich ist. Für das Training wird jede Geste separat als eine Sequenz aufgezeichnet. Beginn und Ende einer Gestensequenz werden durch den Anwender festgelegt.\\
 
-Die automatische Erfassung einer Gestensequenz kann als Erweiterung ermöglicht werden. Sofern dies gelingt, wird das Ganze an einem Anwendungsbeispiel veranschaulicht. Bei diesem Beispiel soll ein NAO Roboter auf erkannte Gesten reagieren.
+In dieser Bachelorarbeit werden Hand- und Armgesten mit dem Myo Armband aufgezeichnet und mit Machine Learning Algorithmen gelernt. Hierbei soll es sich um Gesten handeln, die nach einmaliger Ausführung klassifiziert werden können. Intuitive Gesten sind wünschenswert, aber nicht erforderlich. Ihre Unterscheidbarkeit anhand der aufgenommenen Daten soll im Vordergrund stehen, sodass eine möglichst eindeutige Klassifikation gewährleistet wird. Um die Ähnlichkeit zwischen Gesten festzustellen, werden verschiedene Ähnlichkeitsmaße analysiert und evaluiert. 
+
+Außerdem sollen Gestenklassifikationsalgorithmen analysiert und ausgewertet werden. Die Auswertung soll feststellen, ob eine Gestenerkennung anhand dieser Daten möglich ist. Für das Training müssen verschiedene Gesten mehrfach und möglichst von mehreren Personen aufgenommen werden. Dabei wird jede Geste separat als eine Sequenz aufgezeichnet. Beginn und Ende einer Gestensequenz legt der Anwender fest. Der so gewonnene Datensatz wird in Trainings-, Validierungs- und Testsets unterteilt. Für die Bewertung der Lernalgorithmen wird jeweils die Konfusionsmatrix erstellt und Accuracy, Precision, Recall und F-Measure berechnet.\\
+
+
+Sofern noch genügend Zeit zur Verfügung steht, kann die automatische Erfassung einer Gestensequenz als Erweiterung ermöglicht werden. Gelingt diese, wird das Ganze an einem Anwendungsbeispiel veranschaulicht. Bei diesem Beispiel soll ein NAO Roboter auf erkannte Gesten reagieren. Abschließend könnte dann noch eine kleine Nutzerumfrage durchgeführt werden, welche Feedback zu den angewendeten Gesten liefert. 
+
+
+%Die automatische Erfassung einer Gestensequenz kann als Erweiterung ermöglicht werden. Sofern dies gelingt, wird das Ganze an einem Anwendungsbeispiel veranschaulicht. Bei diesem Beispiel soll ein NAO Roboter auf erkannte Gesten reagieren.Abschließend könnte dann noch eine kleine Nutzerumfrage durchgeführt werden, welche Feedback zu den angewendeten Gesten liefert. 
 
 
 
