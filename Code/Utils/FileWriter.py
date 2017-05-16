@@ -1,3 +1,6 @@
+import os
+import re
+import sys
 import csv
 import math
 from datetime import datetime
@@ -7,6 +10,8 @@ class FileWriter:
 
     def __init__(self):
         self.filesOpened = False
+
+        self.storagePath = os.path.join(os.path.dirname(sys.path[0]), 'Data', 'raw')
 
         # prepare variables for file objects to write data on disk
         self.emgFile = None
@@ -24,30 +29,46 @@ class FileWriter:
     def open_files(self):
         creation_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
+        user_path, gesture_path = input('Please provide name and gesture (e.g: Alice Fist)\n').split()
+
+        # sanitize input to match character exceptions for folders
+        user_path = re.sub(r'[/\\:*?"<>|]+', '', user_path)
+        gesture_path = re.sub(r'[/\\:*?"<>|]+', '', gesture_path)
+
+        # create directories for path \Data\raw\user_path\gesture_path if necessary
+        full_dir_path = os.path.join(self.storagePath, user_path, gesture_path)
+        os.makedirs(full_dir_path, exist_ok=True)
+
         try:
-            self.emgFile = open('emg_' + creation_time + '.csv', 'a+', newline='')
+            self.emgFile = open(os.path.join(full_dir_path, 'emg_' + creation_time + '.csv'),
+                                'a+', newline='')
             self.emgFileWriter = csv.writer(self.emgFile, delimiter=',')
             self.emgFileWriter.writerow(['timestamp,emg1,emg2,emg3,emg4,emg5,emg6,emg7,emg8'])
 
-            self.gyroFile = open('gyro_' + creation_time + '.csv', 'a+', newline='')
+            self.gyroFile = open(os.path.join(full_dir_path, 'gyro_' + creation_time + '.csv'),
+                                 'a+', newline='')
             self.gyroFileWriter = csv.writer(self.gyroFile, delimiter=',')
             self.gyroFileWriter.writerow(['timestamp,x,y,z'])
 
-            self.orientationFile = open('orientation_' + creation_time + '.csv', 'a+', newline='')
+            self.orientationFile = open(os.path.join(full_dir_path, 'orientation_' + creation_time + '.csv'),
+                                        'a+', newline='')
             self.orientationFileWriter = csv.writer(self.orientationFile, delimiter=',')
             self.orientationFileWriter.writerow(['timestamp,x,y,z,w'])
 
-            self.orientationEulerFile = open('orientationEuler_' + creation_time + '.csv', 'a+', newline='')
+            self.orientationEulerFile = open(os.path.join(full_dir_path, 'orientationEuler_' + creation_time + '.csv'),
+                                             'a+', newline='')
             self.orientationEulerFileWriter = csv.writer(self.orientationEulerFile, delimiter=',')
             self.orientationEulerFileWriter.writerow(['timestamp,roll,pitch,yaw'])
 
-            self.accelerometerFile = open('accelerometer_' + creation_time + '.csv', 'a+', newline='')
+            self.accelerometerFile = open(os.path.join(full_dir_path, 'accelerometer_' + creation_time + '.csv'),
+                                          'a+', newline='')
             self.accelerometerFileWriter = csv.writer(self.accelerometerFile, delimiter=',')
             self.accelerometerFileWriter.writerow(['timestamp,x,y,z'])
-        except IOError:
-            print('Could not open file!')
 
-        self.filesOpened = True
+            self.filesOpened = True
+        except IOError:
+            self.filesOpened = False
+            print('Could not open file!')
 
     def write_emg_data(self, timestamp, emg):
         if self.filesOpened:

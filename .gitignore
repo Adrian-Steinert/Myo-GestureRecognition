@@ -12,3 +12,6 @@ myo-python-master/
 myo-sdk-win-0.9.0/
 myo-python-master.zip
 myo-sdk-win-0.9.0.zip
+
+# ignore recorded data
+Data/

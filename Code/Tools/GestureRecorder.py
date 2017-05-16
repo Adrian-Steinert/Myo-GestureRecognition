@@ -15,11 +15,11 @@ dataCollector = DataCollector.DataCollector(fileWriter)
 
 
 def main():
-    print("Connecting to Myo ... Use CTRL^C to exit.")
+    print('Connecting to Myo ... Use CTRL^C to exit.')
     try:
         hub = libmyo.Hub()
     except MemoryError:
-        print("Myo Hub could not be created. Make sure Myo Connect is running.")
+        print('Myo Hub could not be created. Make sure Myo Connect is running.')
         return
 
     hub.set_locking_policy(libmyo.LockingPolicy.none)
@@ -32,22 +32,22 @@ def main():
             # check if Enter was pressed to start/stop recording data
             if msvcrt.kbhit() and (msvcrt.getch() == b'\r'):
                 if fileWriter.filesOpened:
-                    print('Finished collecting data!')
                     fileWriter.close_files()
+                    print('Finished collecting data!')
                 else:
-                    print('Starting to collect data...')
                     fileWriter.open_files()
+                    print('Starting to collect data...')
 
             sleep(0.1)
 
     except KeyboardInterrupt:
-        print("\nQuitting ...")
+        print('\nQuitting ...')
 
     finally:
         if fileWriter.filesOpened:
             print('Closing files...')
             fileWriter.close_files()
-        print("Shutting down hub...")
+        print('Shutting down hub...')
         hub.shutdown()
 
 
