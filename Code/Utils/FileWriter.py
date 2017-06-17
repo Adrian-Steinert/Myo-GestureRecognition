@@ -27,8 +27,6 @@ class FileWriter:
 
     # open files and prepare them for writing
     def open_files(self):
-        creation_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-
         user_path, gesture_path = input('Please provide name and gesture (e.g: Alice Fist)\n').split()
 
         # sanitize input to match character exceptions for folders
@@ -38,6 +36,8 @@ class FileWriter:
         # create directories for path \Data\raw\user_path\gesture_path if necessary
         full_dir_path = os.path.join(self.storagePath, user_path, gesture_path)
         os.makedirs(full_dir_path, exist_ok=True)
+
+        creation_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
         try:
             self.emgFile = open(os.path.join(full_dir_path, 'emg_' + creation_time + '.csv'),
