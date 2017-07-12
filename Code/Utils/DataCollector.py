@@ -35,17 +35,20 @@ class DataCollector(DeviceListener):
             print('Warmup state was: {} -- EMG Stream could not be enabled!')
 
     def on_arm_unsync(self, myo, timestamp):
-        print('ASYMC -- {}'.format(self.__timestamp_to_datetime(timestamp)))
+        print('ASYNC -- {}'.format(self.__timestamp_to_datetime(timestamp)))
 
     def on_unlock(self, myo, timestamp):
-        print('Myo unlocked')
+        # print('Myo unlocked')
+        pass
 
     def on_lock(self, myo, timestamp):
-        print('Myo locked')
+        # print('Myo locked')
+        pass
 
     # TODO: I do not know the initial pose when starting the script
     def on_pose(self, myo, timestamp, pose):
-        print('POSE -- {}: {}'.format(self.__timestamp_to_datetime(timestamp), pose))
+        # print('POSE -- {}: {}'.format(self.__timestamp_to_datetime(timestamp), pose))
+        pass
 
     def on_orientation_data(self, myo, timestamp, orientation):
         if not self.printedORI:

@@ -45,10 +45,12 @@ def main():
 
     finally:
         if fileWriter.filesOpened:
-            print('Closing files...')
+            print('Closing files... ', end='')
             fileWriter.close_files()
-        print('Shutting down hub...')
+            print('DONE')
+        print('Shutting down hub... ', end='')
         hub.shutdown()
+        print('DONE')
 
 
 if __name__ == '__main__':
