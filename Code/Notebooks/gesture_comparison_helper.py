@@ -164,7 +164,7 @@ def all_print(data):
     orientation_euler_print(data)
 
 
-def load_gestures_for_comparison(path):
+def load_gestures(path):
     # converted_data = glob('../Data/converted/*')
 
     loaded_data = []
