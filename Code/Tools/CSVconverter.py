@@ -9,7 +9,6 @@ import pickle
 from glob import glob
 from datetime import datetime
 from collections import Counter
-from scipy.interpolate import interp1d
 
 import threading
 from multiprocessing import Pool
