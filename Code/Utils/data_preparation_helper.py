@@ -4,6 +4,7 @@ import numpy as np
 from itertools import combinations
 from scipy.fftpack import fft
 from sklearn.preprocessing import MinMaxScaler
+from statsmodels.tsa.ar_model import AR
 
 
 def load_gestures(path):
@@ -81,9 +82,11 @@ def create_feature_vector(frame_list, sensor_type):
     frame_list = frame_list.reshape(-1, frame_list.shape[2], order='F')
     # print(frame_list.shape)
 
+    # create emg features
     if sensor_type == 'emg':
-        
-        pass
+        for axis_index in range(0, len(frame_list), axis_count):
+            feature_vector.extend(create_emg_features(frame_list[axis_index:axis_index + axis_count]))
+    # create imu features
     else:
         for axis_index in range(0, len(frame_list), axis_count):
             feature_vector.extend(create_frequency_domain_features(frame_list[axis_index:axis_index + axis_count]))
@@ -268,3 +271,23 @@ def depr_create_time_domain_features(x_fragment, y_fragment, z_fragment):
     time_domain_features.extend([x_y_correlation, x_z_correlation, y_z_correlation])
 
     return time_domain_features
+
+
+def create_emg_features(axis_fragment_list, order=4):
+    emg_features = []
+
+    ar_feature = []
+    mav_feature = []
+
+    for axis_fragment in axis_fragment_list:
+        ar_model = AR(axis_fragment)
+        ar_model_fit = ar_model.fit(maxlag= order)
+        # print('Lag: {}'.format(ar_model_fit.k_ar))
+        # print(ar_model_fit.params)
+        ar_feature.extend(ar_model_fit.params)
+        mav_feature.append(np.mean(np.abs(axis_fragment)))
+
+    emg_features.extend(ar_feature)
+    emg_features.extend(mav_feature)
+
+    return emg_features
