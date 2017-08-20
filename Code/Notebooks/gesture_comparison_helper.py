@@ -1,11 +1,11 @@
-import os
-import re
+import math
 import pickle
 import numpy as np
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 
 from scipy.fftpack import fft
+from collections import Counter
 
 
 def acc_print(data, ylim_range=[-1.5, 1.5]):
@@ -191,3 +191,47 @@ def load_gestures(path):
     for element in path:
         loaded_data.append(pickle.load(open(element, 'rb')))
     return loaded_data
+
+
+def find_gesture_start_end(gesture_dict, round_to_milli=False):
+    CONVERT_MILLI_MICRO = 1_000
+
+    acc_timestamp_start = gesture_dict['accelerometer']['timestamps'][0]
+    acc_timestamp_end = gesture_dict['accelerometer']['timestamps'][-1]
+    emg_timestamp_start = gesture_dict['emg']['timestamps'][0]
+    emg_timestamp_end = gesture_dict['emg']['timestamps'][-1]
+    gyro_timestamp_start = gesture_dict['gyro']['timestamps'][0]
+    gyro_timestamp_end = gesture_dict['gyro']['timestamps'][-1]
+    ori_timestamp_start = gesture_dict['orientation']['timestamps'][0]
+    ori_timestamp_end = gesture_dict['orientation']['timestamps'][-1]
+
+    sorted_list = sorted([acc_timestamp_start, acc_timestamp_end, emg_timestamp_start, emg_timestamp_end,
+                         gyro_timestamp_start, gyro_timestamp_end, ori_timestamp_start, ori_timestamp_end])
+
+    if round_to_milli:
+        start = int(math.floor(sorted_list[0] / CONVERT_MILLI_MICRO) * CONVERT_MILLI_MICRO)
+        end = int(math.ceil(sorted_list[-1] / CONVERT_MILLI_MICRO) * CONVERT_MILLI_MICRO)
+    else:
+        start = sorted_list[0]
+        end = sorted_list[-1]
+
+    # start, end and duration are returned in microseconds
+    return start, end, end - start
+
+
+def eliminate_duplicates(list_with_duplicates):
+    '''
+    DEPRECATED
+    '''
+    cleaned_list = []
+
+    duplicate_counter = Counter(list_with_duplicates)
+
+    for element, count in duplicate_counter.items():
+        if count < 2:
+            cleaned_list.append(element)
+        else:
+            for increment_by_one in range(count):
+                cleaned_list.append(element + increment_by_one)
+
+    return sorted(cleaned_list)

@@ -2,13 +2,11 @@ import os
 import re
 import csv
 import sys
-import math
 import time
 import pickle
 
 from glob import glob
 from datetime import datetime
-from collections import Counter
 
 import threading
 from multiprocessing import Pool
@@ -136,66 +134,6 @@ def acquire_data(user, gesture, gesture_dict):
         timestamp = re.sub(r'.*\\[a-z_]+', '', gesture_chunk[0]).strip('.csv')
         pickle.dump(gesture_dict, open(os.path.join(savePath, gesture_dict['gesture'] + timestamp) + '.p', 'wb'))
         # print(interpolated_dict)
-
-
-def eliminate_duplicates(list_with_duplicates):
-    cleaned_list = []
-
-    duplicate_counter = Counter(list_with_duplicates)
-
-    for element, count in duplicate_counter.items():
-        if count < 2:
-            cleaned_list.append(element)
-        else:
-            for increment_by_one in range(count):
-                cleaned_list.append(element + increment_by_one)
-
-    return sorted(cleaned_list)
-
-
-# timestep_size is an integer with unit microseconds
-#
-# interpolation from scipy.interpolate.interp1d return numpy ndarrays with a single element, i cast this to float before
-# appending to a list
-def interpolate_data(gesture_dict, interpolated_dict, timestep_size):
-    # start = time.time()
-    gesture_start, gesture_end = find_gesture_start_end(gesture_dict)
-    # print('Find start/end:   {}'.format(time.time() - start))
-    # print('-'*20)
-    # prepare interpolated dict
-    interpolated_dict['gesture'] = gesture_dict['gesture']
-    interpolated_dict['datetime'] = gesture_dict['datetime']
-    interpolated_dict['performed_by'] = gesture_dict['performed_by']
-    interpolated_dict['timestamps'] = list(range(gesture_start, gesture_end + 1, timestep_size)) # end shall be included thus + 1
-
-    # get references to internal dicts
-    acc_dict = gesture_dict['accelerometer']
-    emg_dict = gesture_dict['emg']
-    gyro_dict = gesture_dict['gyro']
-    ori_dict = gesture_dict['orientation']
-    ori_euler_dict = gesture_dict['orientationEuler']
-
-
-def find_gesture_start_end(gesture_dict):
-    CONVERT_MILLI_MICRO = 1_000
-
-    acc_timestamp_start = gesture_dict['accelerometer']['timestamps'][0]
-    acc_timestamp_end = gesture_dict['accelerometer']['timestamps'][-1]
-    emg_timestamp_start = gesture_dict['emg']['timestamps'][0]
-    emg_timestamp_end = gesture_dict['emg']['timestamps'][-1]
-    gyro_timestamp_start = gesture_dict['gyro']['timestamps'][0]
-    gyro_timestamp_end = gesture_dict['gyro']['timestamps'][-1]
-    ori_timestamp_start = gesture_dict['orientation']['timestamps'][0]
-    ori_timestamp_end = gesture_dict['orientation']['timestamps'][-1]
-
-    sorted_list = sorted([acc_timestamp_start, acc_timestamp_end, emg_timestamp_start, emg_timestamp_end,
-                         gyro_timestamp_start, gyro_timestamp_end, ori_timestamp_start, ori_timestamp_end])
-
-    start = int(math.floor(sorted_list[0] / CONVERT_MILLI_MICRO) * CONVERT_MILLI_MICRO)
-    end = int(math.ceil(sorted_list[-1] / CONVERT_MILLI_MICRO) * CONVERT_MILLI_MICRO)
-
-    # start and end are returned in microseconds
-    return start, end
 
 
 def get_parameters():
