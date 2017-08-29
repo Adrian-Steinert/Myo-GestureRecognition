@@ -4,11 +4,10 @@ import numpy as np
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 
-from scipy.fftpack import fft
 from collections import Counter
 
 
-def acc_print(data, ylim_range=[-1.5, 1.5]):
+def acc_print(data, ylim_range=(-1.5, 1.5)):
     f, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex='col', sharey='row')
 
     ax1.set_title('Accelerometer - x')
@@ -38,7 +37,7 @@ def acc_print(data, ylim_range=[-1.5, 1.5]):
     f.legend(handles, labels, 'center right')
 
 
-def emg_print(data, ylim_range=[-150, 150]):
+def emg_print(data, ylim_range=(-150, 150)):
     f, ((ax1, ax2), (ax3, ax4), (ax5, ax6), (ax7, ax8)) = plt.subplots(4, 2, sharex='col', sharey='row')
 
     ax1.set_title('EMG 1')
@@ -84,7 +83,7 @@ def emg_print(data, ylim_range=[-150, 150]):
     f.legend(handles, labels, 'center right')
 
 
-def gyro_print(data, ylim_range=[-250, 250]):
+def gyro_print(data, ylim_range=(-250, 250)):
     f, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex='col', sharey='row')
 
     ax1.set_title('Gyroscope - x')
@@ -114,7 +113,7 @@ def gyro_print(data, ylim_range=[-250, 250]):
     f.legend(handles, labels, 'center right')
 
 
-def orientation_print(data, ylim_range=[-1.5, 1.5]):
+def orientation_print(data, ylim_range=(-1.5, 1.5)):
     f, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, sharex='col', sharey='row')
 
     ax1.set_title('Orientation - x')
@@ -148,7 +147,7 @@ def orientation_print(data, ylim_range=[-1.5, 1.5]):
     f.legend(handles, labels, 'center right')
 
 
-def orientation_euler_print(data, ylim_range=[-5, 5]):
+def orientation_euler_print(data, ylim_range=(-5, 5)):
     f, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex='col', sharey='row')
 
     ax1.set_title('Orientation Euler - roll')
@@ -218,11 +217,11 @@ def find_gesture_start_end(gesture_dict, round_to_milli=False):
     # start, end and duration are returned in microseconds
     return start, end, end - start
 
+########################################################################################################################
+# the following functions are deprecated
 
-def eliminate_duplicates(list_with_duplicates):
-    '''
-    DEPRECATED
-    '''
+
+def _depr_eliminate_duplicates(list_with_duplicates):
     cleaned_list = []
 
     duplicate_counter = Counter(list_with_duplicates)
