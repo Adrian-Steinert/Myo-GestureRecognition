@@ -8,9 +8,8 @@ from sklearn.externals import joblib
 
 
 class MyoHmmClassifier:
-    def __init__(self, sensor_type, n_classes, n_states_per_hmm):
+    def __init__(self, sensor_type, n_states_per_hmm):
         self._sensor_type = sensor_type
-        self._n_classes = n_classes
         self._class_mapping = {}
         self._n_states_per_hmm = n_states_per_hmm
         self._is_fit = False
@@ -21,11 +20,6 @@ class MyoHmmClassifier:
         y = y[sorted_indices]
         class_counter = Counter(y)
         train_lengths = list(class_counter.values())
-
-        if len(class_counter) != self._n_classes:
-            print('Number of classes insufficient: Expected {} but was {}'.format(self._n_classes,
-                                                                                  len(class_counter)))
-            return None
 
         # map classes to hmm
         self._class_mapping = {class_label: GaussianHMM(self._n_states_per_hmm) for class_label in class_counter}

@@ -1,10 +1,62 @@
+import os
+import re
 import pickle
+import math
 import numpy as np
 
+from glob import glob
 from itertools import combinations
 from scipy.fftpack import fft
 from sklearn.preprocessing import MinMaxScaler
 from statsmodels.tsa.ar_model import AR
+
+
+def load_data_for_classification(regex, train_part=0.6, verbose=False):
+    if train_part > 0.8:
+        print('train_part is {}, which leaves less than 10% for testing and validation. This is forbidden.'
+              .format(train_part))
+        return None
+    gesture_groups = {'own': ['big_stop', 'come_down', 'come_here', 'come_up', 'flip', 'small_stop'],
+                      'paper': ['hcwh', 'hcwv', 'hcws',
+                                'hcch', 'hccv', 'hccs',
+                                'tcwh', 'tcwv', 'tcws',
+                                'tcch', 'tccv', 'tccs',
+                                'lcwh', 'lcwv', 'lcws',
+                                'lcch', 'lccv', 'lccs'
+                                ]}
+
+    if regex == 'own':
+        regex = '|'.join(gesture_groups['own'])
+    elif regex == 'paper':
+        regex = '|'.join(gesture_groups['paper'])
+    elif regex == 'all':
+        regex = '|'.join(gesture_groups['own'] + gesture_groups['paper'])
+
+    gesture_paths = glob(os.path.abspath(os.path.join('..', 'Data', 'converted')) + '\*\*\*')
+
+    pattern = re.compile(regex)
+    filtered_gesture_paths = [path_str for path_str in gesture_paths if pattern.search(path_str)]
+    filtered_len = len(filtered_gesture_paths)
+
+    train_index = math.ceil(filtered_len*train_part)
+    train = filtered_gesture_paths[:train_index]
+
+    valid_test_part = (1 - train_part) / 2
+    valid_test_index = math.floor(filtered_len*valid_test_part)
+    valid = filtered_gesture_paths[train_index:train_index + valid_test_index]
+
+    test = filtered_gesture_paths[train_index + valid_test_index:]
+
+    if len(train) + len(valid) + len(test) != filtered_len:
+        print('Somethings damn wrong here!')
+        return None
+    if verbose:
+        print('train - {}\n{}'.format(len(train), train))
+        print('valid - {}\n{}'.format(len(valid), valid))
+        print('test - {}\n{}'.format(len(test), test))
+        return load_gestures(train), load_gestures(valid), load_gestures(test)
+    else:
+        return load_gestures(train), load_gestures(valid), load_gestures(test)
 
 
 def load_gestures(path):
@@ -192,7 +244,7 @@ def create_feature_vector(frame_list, sensor_type):
     return feature_vector
 
 
-def prepare_data(acc_train, frame_number, sensor_type):
+def prepare_data(acc_train, frame_number, sensor_type, verbose=True):
     label = []
     train_input = []
     features_per_gesture = []
@@ -206,9 +258,10 @@ def prepare_data(acc_train, frame_number, sensor_type):
         splitted_frames = split_in_frames(sensor_data, frame_number)
 
         if splitted_frames is None:
-            data_length = len(gesture[sensor_type]['timestamps'])
-            print('split_in_frames() returned None for sensor_type {}: Data length was {} but needs to be at least {}'
-                  .format(sensor_type, data_length, (frame_number + 1) * 3))
+            if verbose:
+                data_length = len(gesture[sensor_type]['timestamps'])
+                print('split_in_frames() returned None for sensor_type {}: Data length was {} but needs to be at least {}'
+                      .format(sensor_type, data_length, (frame_number + 1) * 3))
             continue
 
         features = create_feature_vector(splitted_frames, sensor_type)
