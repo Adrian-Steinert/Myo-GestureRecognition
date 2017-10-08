@@ -49,7 +49,7 @@ class GestureListener(DeviceListener):
 
     def on_orientation_data(self, myo, timestamp, orientation):
         if self.is_recording:
-            self.gesture['orientation']['timestamp'].append(timestamp)
+            #self.gesture['orientation']['timestamps'].append(timestamp)
             self.gesture['orientation']['z'].append(orientation.x)
             self.gesture['orientation']['x'].append(orientation.y)
             self.gesture['orientation']['y'].append(orientation.z)
@@ -57,14 +57,14 @@ class GestureListener(DeviceListener):
 
     def on_accelerometor_data(self, myo, timestamp, acceleration):
         if self.is_recording:
-            self.gesture['accelerometer']['timestamp'].append(timestamp)
+            #self.gesture['accelerometer']['timestamps'].append(timestamp)
             self.gesture['accelerometer']['x'].append(acceleration.x)
             self.gesture['accelerometer']['y'].append(acceleration.y)
             self.gesture['accelerometer']['z'].append(acceleration.z)
 
     def on_gyroscope_data(self, myo, timestamp, gyroscope):
         if self.is_recording:
-            self.gesture['gyro']['timestamp'].append(timestamp)
+            #self.gesture['gyro']['timestamps'].append(timestamp)
             self.gesture['gyro']['x'].append(gyroscope.x)
             self.gesture['gyro']['y'].append(gyroscope.y)
             self.gesture['gyro']['z'].append(gyroscope.z)
@@ -79,7 +79,7 @@ class GestureListener(DeviceListener):
 
     def on_emg_data(self, myo, timestamp, emg):
         if self.is_recording:
-            self.gesture['emg']['timestamp'].append(timestamp)
+            #self.gesture['emg']['timestamps'].append(timestamp)
             self.gesture['emg']['1'].append(emg[0])
             self.gesture['emg']['2'].append(emg[1])
             self.gesture['emg']['3'].append(emg[2])
@@ -95,17 +95,17 @@ class GestureListener(DeviceListener):
             myo.set_stream_emg(StreamEmg.enabled)
 
     @staticmethod
-    def clear_gesture(self):
+    def clear_gesture():
         gesture = {'accelerometer':
                     {
-                        'timestamps': [],
+                        # 'timestamps': [],
                         'x': [],
                         'y': [],
                         'z': []
                     },
                     'emg':
                         {
-                            'timestamps': [],
+                            # 'timestamps': [],
                             '1': [],
                             '3': [],
                             '2': [],
@@ -117,14 +117,14 @@ class GestureListener(DeviceListener):
                         },
                     'gyro':
                         {
-                            'timestamps': [],
+                            # 'timestamps': [],
                             'x': [],
                             'y': [],
                             'z': []
                         },
                     'orientation':
                         {
-                            'timestamps': [],
+                            # 'timestamps': [],
                             'x': [],
                             'y': [],
                             'z': [],

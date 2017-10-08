@@ -3,6 +3,8 @@ import re
 import pickle
 import math
 import numpy as np
+import scipy.spatial.distance as dis
+import scipy.stats as st
 
 from glob import glob
 from itertools import combinations
@@ -102,6 +104,9 @@ def calculate_energy(fft_no_mean_fragment, fragment_length):
 
 
 def calculate_entropy(fft_fragment, fft_no_mean_fragment):
+    if all(e == 0 for e in fft_no_mean_fragment):
+        return 0
+
     probability = np.divide(np.absolute(fft_fragment), np.sum(np.absolute(fft_no_mean_fragment)))
 
     # mask all values that equal 0, then create new array without masked values
@@ -124,9 +129,14 @@ def create_time_domain_features(axis_fragment_list):
     # fith feature: axis correlation
     # we want to have two fragments of different axis, to calculate correlation
     for axis_fragment_combination in combinations(axis_fragment_list, 2):
-        axis_fragment_correlation = calculate_axis_correlation(axis_fragment_combination[0],
-                                                               axis_fragment_combination[1])
-        time_domain_features.append(axis_fragment_correlation)
+        # print(axis_fragment)
+        # axis_fragment_correlation = calculate_axis_correlation(axis_fragment_combination[0],
+        #                                                        axis_fragment_combination[1])
+        # time_domain_features.append(axis_fragment_correlation)
+        # euclid_similarity = 1/(1+dis.euclidean(axis_fragment_combination[0], axis_fragment_combination[1]))
+        # time_domain_features.append(euclid_similarity)
+        pearson = st.pearsonr(axis_fragment_combination[0], axis_fragment_combination[1])[0]
+        time_domain_features.append(pearson)
     # print(len(time_domain_features))
     return time_domain_features
 
@@ -143,7 +153,7 @@ def calculate_axis_correlation(axis_1, axis_2):
     return correlation
 
 
-def create_emg_features(axis_fragment_list, order=4):
+def create_emg_features(axis_fragment_list, order=2):
     emg_features = []
 
     ar_feature = []
@@ -173,7 +183,7 @@ def split_in_frames(sensor_data, frame_number):
     segment_length = data_length // segment_count
 
     # check if data is long enough for given frame_number
-    if segment_length <= 2:
+    if segment_length <= 3:
         return None
 
     cut_off = data_length % segment_count
@@ -244,14 +254,14 @@ def create_feature_vector(frame_list, sensor_type):
     return feature_vector
 
 
-def prepare_data(acc_train, frame_number, sensor_type, verbose=True):
+def prepare_data(input, frame_number, sensor_type, extract_features=True, is_labeled=True, verbose=True):
     label = []
-    train_input = []
+    data_output = []
     features_per_gesture = []
 
     scaler = MinMaxScaler(feature_range=(0, 1))
 
-    for gesture in acc_train:
+    for gesture in input:
         sensor_data = [gesture[sensor_type][sensor_axis] for sensor_axis in gesture[sensor_type]
                        if sensor_axis != 'timestamps']
 
@@ -264,11 +274,16 @@ def prepare_data(acc_train, frame_number, sensor_type, verbose=True):
                       .format(sensor_type, data_length, (frame_number + 1) * 3))
             continue
 
-        features = create_feature_vector(splitted_frames, sensor_type)
+        if extract_features:
+            features = create_feature_vector(splitted_frames, sensor_type)
 
-        if features is not None:
-            features_per_gesture.append(features)
-            label.append(gesture['gesture'])
+            if features is not None:
+                features_per_gesture.append(features)
+                if is_labeled: label.append(gesture['gesture'])
+        else:
+            features_per_gesture.append(splitted_frames)
+            if is_labeled: label.append(gesture['gesture'])
+
 
     for feature_list in features_per_gesture:
         features = np.abs(feature_list)
@@ -276,8 +291,11 @@ def prepare_data(acc_train, frame_number, sensor_type, verbose=True):
 
         features = scaler.fit_transform(features.reshape(-1, 1)).reshape(o_shape)
 
-        train_input.append(features)
-    return np.array(train_input), np.array(label)
+        data_output.append(features)
+    if is_labeled:
+        return np.array(data_output), np.array(label)
+    else:
+        return np.array(data_output)
 
 ########################################################################################################################
 # the following functions are deprecated due to their static nature, they were replaced by their respective dynamic
